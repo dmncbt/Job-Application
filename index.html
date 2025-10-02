@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Job Application — Typing Test</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<style>
+  /* 1. The main form field container */
+.choices {
+    background: none;
+    border: none;
+    font-size: var(--font-medium); /* Use defined font size */
+}
+
+/* 2. The input area within the form field */
+.choices__inner {
+    /* Match the style of your <input> fields */
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: var(--glass-inner);
+    min-height: 48px;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* 3. Text color inside the form field */
+.choices__list--single .choices__item {
+    color: #f9fafb;
+}
+
+/* 4. The Dropdown List (The part you click to open) */
+.choices__list--dropdown {
+    /* The Glassmorphism Effect for the list */
+    background: var(--glass-bg) !important; /* Forces your dark background */
+    border-radius: var(--radius) !important;
+    box-shadow: var(--shadow) !important;
+    border: 1px solid rgba(34, 8, 8, 0.18) !important;
+    backdrop-filter: blur(15px) !important; /* The Frosted Glass Effect */
+    -webkit-backdrop-filter: blur(15px) !important; /* Add !important here too */
+    margin-top: 5px;
+    z-index: 10;
+}
+
+/* 5. Individual Options in the list (Default state) */
+.choices__list--dropdown .choices__item--selectable {
+    /* ... other styles ... */
+    color: #fff; /* ENSURE THIS IS WHITE */
+    /* ... other styles ... */
+}
+
+/* 6. Highlighted/Hovered Option in the list */
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+    /* Set the background to a DARK color (your accent blue) */
+    background: var(--accent-2) !important; 
+    
+    /* Set the text to BRIGHT WHITE to ensure readability on the dark blue */
+    color: #fff !important; 
+}
+
+/* 7. Dropdown Icon (Style the arrow to be white/muted) */
+.choices[data-type*="select-one"]:after {
+    border: none;
+    /* Custom SVG for a white downward arrow */
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e0e7ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    height: 18px;
+    width: 18px;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0;
+}
+.choices[data-type*="select-one"].is-open:after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Hide Choices.js internal input, since we don't need a search box */
+.choices__input {
+    display: none;
+}
+    :root{
+      /* New Glassmorphism-friendly background colors (optional, but helps effect) */
+      --bg-1: #000428; /* Deep blue */
+      --bg-2: #494b4d; /* Richer blue */
+
+      /* Semi-transparent white for glass background (used for cards, header, passage) */
+      --glass-bg: rgba(15, 1, 1, 0.15);
+      /* Semi-transparent white for inner elements like inputs, metrics */
+      --glass-inner: rgba(185, 171, 171, 0.08);
+
+      --accent-1: #225dff;
+      --accent-2: #225dff;
+      --muted: #ffffff; /* Lighter muted text for better contrast on glass */
+      /* FIX: Corrected typo from 18==px to 18px */
+      --radius: 18px; /* Slightly larger radius for main cards/containers */
+      /* Softer shadow for glass */
+      --shadow: 0 16px 40px rgba(39, 39, 39, 0.25);
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      /* More vibrant background to showcase the blur effect */
+      background: linear-gradient(135deg, #2c5364, #0f2027, #2c5364); 
+      margin:0;
+      padding:40px 20px;
+      color:#fff; /* Use pure white for primary text */
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: 1fr 460px;
+      gap:28px;
+      align-items:start;
+    }
+
+    /* Header - Applying glass effect to the header area */
+    header{
+      grid-column: 1 / -1;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:6px;
+      padding-bottom:12px;
+      /* Glassmorphism Header */
+      background: var(--glass-bg);
+      border-radius: var(--radius); /* Round edges for header */
+      padding: 18px 26px; /* Added padding to header */
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.18); /* White border */
+    }
+    header h1{
+      font-size:1.6rem;
+      color:#fff;
+      letter-spacing:0.2px;
+      margin:0;
+    }
+    header p{ color:var(--muted); margin:0; font-size:0.95rem }
+
+    /* Form card and Typing card - Main glassmorphism effect */
+    .card{
+      background: var(--glass-bg); /* Semi-transparent background */
+      border-radius: var(--radius); /* Round edges for main cards */
+      padding:26px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.18); /* Subtle white border */
+      backdrop-filter: blur(15px); /* The "frosted glass" effect */
+      -webkit-backdrop-filter: blur(15px);
+    }
+    
+    /* Image Section Card (The "We are a happy place" banner) */
+    .image-card-wrap {
+      grid-column: 1 / -1;
+      padding-top: 24px;
+    }
+    .image-card {
+      /* Replicate the card style for the full-width image banner */
+      background: var(--glass-bg);
+      border-radius: var(--radius); /* Round edges for the banner */
+      padding:0; /* No padding needed here since content is an image */
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      overflow: hidden; /* Important for image to respect border-radius */
+    }
+    .image-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+
+    form .field{ margin-bottom:14px; }
+    label{
+      display:block;
+      margin-bottom:8px;
+      font-weight:600;
+      color:#fff;
+      font-size:0.95rem;
+    }
+
+    /* Input Fields - Subtle glassmorphism on inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    select,
+    textarea {
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px; /* Set to 12px for rounder input fields */
+      border:1px solid rgba(255,255,255,0.3); /* Slightly stronger border for definition */
+      background: var(--glass-inner); /* Very faint background */
+      font-size:0.95rem;
+      outline:none;
+      color:#f9fafb;
+      transition:box-shadow .18s, border-color .18s;
+    }
+    input:focus, select:focus, textarea:focus{
+      box-shadow: 0 0 0 2px var(--accent-1), 0 6px 20px rgba(59,130,246,0.25);
+      border-color: var(--accent-1);
+      background: rgba(255, 255, 255, 0.15); /* Slightly less transparent on focus */
+    }
+
+    .row{ display:flex; gap:12px; }
+    .row .field{ flex:1 }
+
+    /* Right column - typing test */
+    .typing-column{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    /* Passage Area - Styled to look like a separate inner glass panel */
+    .passage{
+      background: var(--glass-inner);
+      border-radius:12px; /* Set to 12px for a rounder passage box */
+      padding:14px;
+      border:1px solid rgba(255,255,255,0.2);
+      min-height:64px;
+      line-height:1.55;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-size:0.95rem;
+      color:#f3f4f6;
+    }
+    .passage .char{ white-space:pre-wrap; }
+    .char.correct{ color: #22c55e; background: rgba(34,197,94,0.08); border-radius:3px; }
+    .char.incorrect{ color:#ef4444; background: rgba(239,68,68,0.08); border-radius:3px; }
+    .char.current{ background: rgba(59,130,246,0.3); border-bottom:2px solid rgba(59,130,246,0.5); }
+
+    textarea#typing {
+      min-height:130px;
+      max-height:240px;
+      resize:none;
+      font-size:0.95rem;
+      line-height:1.45;
+    }
+
+    /* Metrics - Inner glass panels */
+    .metrics{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+    .metric{
+      background:var(--glass-inner); /* Inner glass background */
+      padding:10px 12px;
+      border-radius:12px; /* Set to 12px for rounder metric boxes */
+      border:1px solid rgba(255,255,255,0.2);
+      text-align:center;
+      font-weight:600;
+      color:#fff;
+    }
+    .metric small{ display:block; font-weight:500; color:var(--muted); font-size:0.78rem; margin-top:4px; font-weight:500; }
+
+    /* Controls (buttons are fine as-is but adjusted 'ghost' for contrast) */
+    .controls{ display:flex; gap:10px; margin-top:12px; }
+    button.btn{
+      padding:11px 14px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
+      letter-spacing:0.3px;
+      color:white;
+      background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      transition: all 0.2s ease;
+    }
+    button.btn:hover {
+      opacity: 0.9;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
+    button.ghost{
+      background:rgba(255,255,255,0.05); /* slightly visible ghost button */
+      color:#e5e7eb;
+      border:1px solid rgba(255,255,255,0.3);
+      font-weight:700;
+    }
+
+    /* Submit button - kept the vibrant look */
+    .submit-wrap{ margin-top:16px; display:flex; gap:12px; align-items:center; }
+    .submit-wrap button[type="submit"]{
+      width:100%;
+      padding:13px 16px;
+      border-radius:12px; /* Set to 12px for a rounder submit button */
+      font-weight:700;
+      border:none;
+      color:white;
+      background: linear-gradient(90deg,var(--accent-2),var(--accent-1));
+      cursor:pointer;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      font-size:1rem;
+      transition: all 0.2s ease;
+    }
+    .submit-wrap button[type="submit"]:hover{
+      opacity: 0.9;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.4);
+    }
+    /* Inside the <style> block, below .submit-wrap button[type="submit"] styles */
+/* Added CSS for the new 'Submit Resume' link button */
+.btn-upload-resume {
+ display: block;
+width: 100%;
+padding: 13px 16px;
+ border-radius: 12px; /* Set to 12px for a rounder submit button */
+font-weight: 700;
+border: none;
+color: white;
+/* MODIFIED: Using the same gradient as the submit application button */
+ background: linear-gradient(90deg,var(--accent-2),var(--accent-1)); 
+cursor: pointer;
+box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+font-size: 1rem;
+transition: all 0.2s ease;
+text-align: center; /* Center the text for the link */
+text-decoration: none; /* Remove underline from link */
+ margin-bottom: 12px; /* Add space between the two submit buttons */
+}
+
+ .btn-upload-resume:hover {
+opacity: 0.9;
+box-shadow: 0 14px 35px rgba(0, 0, 0, 0.4);
+ }
+    .note{ color:var(--muted); font-size:0.88rem; text-align:right; }
+
+    /* responsive */
+    @media (max-width:980px){
+      .container{ grid-template-columns: 1fr; }
+      .typing-column{ order: 2; }
+      header p{ text-align:left; margin-top:6px }
+      .image-card-wrap { padding-top: 14px; }
+    }
+    
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <img src="https://i.imgur.com/kBVzY5G.png" alt="Company Logo" style="height:54px;width:auto;">
+        <div>
+          <h1>Job Application</h1>
+          <p>Complete the form and take the short typing test.</p>
+        </div>
+      </div>
+      <div class="header-actions" style="text-align:right;">
+        <small style="color:var(--muted);font-weight:600;letter-spacing:0.3px;">
+
+        </small>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top: -10px; margin-left: 8px; vertical-align: middle;"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.44a2 2 0 0 1-2 2h-1.34a2 2 0 0 0-2 2v.44a2 2 0 0 1-2 2v.44a2 2 0 0 1-2 2v.44a2 2 0 0 0 2 2h1.34a2 2 0 0 1 2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 1 2 2v.44a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.44a2 2 0 0 1 2-2h1.34a2 2 0 0 0 2-2v-.44a2 2 0 0 1 2-2v-.44a2 2 0 0 1 2-2v-.44a2 2 0 0 0-2-2h-1.34a2 2 0 0 1-2-2v-.44a2 2 0 0 0-2-2h-.44a2 2 0 0 1-2-2v-.44a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+    </header>
+
+    <div class="image-card-wrap">
+      <div class="image-card">
+        <img src="picture.png" alt="We are a happy place to work! Join us today!" /> 
+      </div>
+    </div>
+    
+    <div class="card">
+      <form id="applicationForm" autocomplete="off">
+        <div class="row">
+          <div class="field">
+            <label for="fullName">Full name</label>
+            <input id="fullName" name="name" type="text" required placeholder="Jane Doe" />
+          </div>
+          <div class="field">
+            <label for="dob">Date of birth</label>
+            <input id="dob" name="dob" type="date" required />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="address">Current address</label>
+          <input id="address" name="address" type="text" required placeholder="Street, City, Country" />
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+              <option value="">Select…</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="education">Education attainment</label>
+            <input id="education" name="education" type="text" required placeholder="e.g. Bachelor's Degree" />
+          </div>
+        </div>
+        <div class="field">
+            <label for="jobPosition">Applying for Position</label>
+            <select id="jobPosition" name="jobPosition" required>
+              <option value="">Select...</option>
+              <option value="Customer Service Representative">Customer Service Representative (CSR)</option>
+              <option value="SoundBoard Representative">SoundBoard Representative</option>
+              <option value="Sales Associate">Sales Associate</option>
+            </select>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com" />
+          </div>
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input id="phone" name="phone" type="tel" required placeholder="+63 9XXXXXXXXX" />
+          </div>
+        </div>
+
+<div class="submit-wrap">
+<div style="flex:1">
+<a href="https://drive.google.com/drive/folders/1WyzUJymJ00L1tQ3vjRoUzHGq1O13cJmH?usp=drive_link" target="_blank" class="btn-upload-resume">Submit Resume</a>
+</div>
+</div>
+
+<div class="submit-wrap">
+<div style="flex:1">
+<button type="submit">Submit application</button>
+</div>
+</div>
+      </form>
+    </div>
+
+    <div class="typing-column">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <strong style="font-size:1.05rem">Typing Test</strong>
+            <div style="font-size:0.9rem;color:var(--muted)">Timed short passage — small test of speed & accuracy</div>
+          </div>
+          <div style="font-size:0.9rem;color:var(--muted)">⏱️ Only typing test is timed</div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="passage" id="passage" aria-hidden="true"></div>
+        </div>
+
+        <textarea id="typing" placeholder="Start typing the passage shown above..." aria-label="Typing area"></textarea>
+
+        <div class="metrics" style="margin-top:12px;">
+          <div class="metric">
+            <div id="time">0s</div>
+            <small>Time</small>
+          </div>
+          <div class="metric">
+            <div id="wpm">0</div>
+            <small>WPM</small>
+          </div>
+          <div class="metric">
+            <div id="errors">0</div>
+            <small>Errors (incl. backspace)</small>
+          </div>
+          <div class="metric">
+            <div id="accuracy">100%</div>
+            <small>Accuracy</small>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="btnRestart" class="ghost btn">Reset</button>
+          <button id="btnNew" class="ghost btn">New passage</button>
+          <button id="btnFinish" class="ghost btn">Finish</button>
+        </div>
+      </div>
+
+      <div style="text-align:center;color:var(--muted);font-size:0.88rem;padding-top:6px">
+        Note: Take the typing test before submitting your application.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*******************************
+     * ========== SETTINGS =========
+     *******************************/
+    // Replace these with your EmailJS details:
+   const EMAILJS_PUBLIC_KEY = "b6WUDhOBxB5FLn0xq";
+    const EMAILJS_SERVICE_ID = "service_qt1baod";
+    const EMAILJS_TEMPLATE_ID = "template_08zhwg9";
+
+    // If you want the submission to go to multiple recipients,
+    // put them here. The code will pass them as 'bcc_email' (comma separated).
+    // NOTE: In your EmailJS template settings, use {{bcc_email}} in BCC field
+    // OR set your Recipients to the comma-separated string. If you'd rather
+    // send separate emails to each address, uncomment the "sendToEachRecipient" logic below.
+    const RECIPIENTS = [
+      "michaeldominiccastillo@gmail.com",
+      "ops_rmolina@igrantmarketing.com",
+      "hr_ilopena@igrantmarketing.com",
+      "hr_mcapistrano@igrantmarketing.com"
+    ];
+
+    /*******************************
+     * ======= EmailJS init =========
+     *******************************/
+    // initialize EmailJS v3
+    if (typeof emailjs === "undefined") {
+      console.error("EmailJS SDK not loaded — check the script tag.");
+    } else {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+    }
+
+    /*******************************
+     * ===== Typing test logic =====
+     *******************************/
+    const passages = [
+      "The quick brown fox jumps over the lazy dog.",
+      "Hiring fast, hiring smart — speed matters, but accuracy wins the job.",
+      "Communication and accuracy are key traits of a reliable candidate for any role."
+    ];
+
+    const passageEl = document.getElementById("passage");
+    const typingEl = document.getElementById("typing");
+    const timeEl = document.getElementById("time");
+    const wpmEl = document.getElementById("wpm");
+    const errorsEl = document.getElementById("errors");
+    const accuracyEl = document.getElementById("accuracy");
+    const btnRestart = document.getElementById("btnRestart");
+    const btnNew = document.getElementById("btnNew");
+    const btnFinish = document.getElementById("btnFinish");
+
+    // state
+    let currentPassage = "";
+    let started = false;
+    let startTime = 0;
+    let timerInterval = null;
+    let backspaceCount = 0;
+    let finalStats = { timeSec: 0, wpm: 0, errors: 0, accuracy: 100 };
+
+    function pickRandomPassage(){
+      currentPassage = passages[Math.floor(Math.random() * passages.length)];
+      renderPassage();
+      resetTypingState();
+    }
+
+    function renderPassage(){
+      passageEl.innerHTML = "";
+      for (let ch of currentPassage) {
+        const span = document.createElement("span");
+        span.textContent = ch;
+        span.className = "char";
+        passageEl.appendChild(span);
+      }
+    }
+
+    function resetTypingState(){
+      started = false;
+      startTime = 0;
+      backspaceCount = 0;
+      finalStats = { timeSec: 0, wpm: 0, errors: 0, accuracy: 100 };
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+      typingEl.disabled = false;
+      typingEl.value = "";
+      updateUI(0,0,0,100);
+      // clear char classes
+      const spans = passageEl.querySelectorAll(".char");
+      spans.forEach(s => { s.classList.remove("correct", "incorrect", "current"); });
+      // mark first char as current
+      if (spans[0]) spans[0].classList.add("current");
+    }
+
+    function startTimerIfNeeded(){
+      if (!started){
+        started = true;
+        startTime = Date.now();
+        timerInterval = setInterval(() => {
+          const elapsed = (Date.now() - startTime) / 1000;
+          timeEl.textContent = formatTime(elapsed);
+        }, 200);
+      }
+    }
+
+    function stopTimer(){
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+      const elapsed = (Date.now() - startTime) / 1000;
+      finalStats.timeSec = Math.round(elapsed * 100) / 100;
+    }
+
+    function formatTime(seconds){
+      // show as '12.3s' (1 decimal)
+      if (!seconds || seconds < 1) return "0s";
+      return Math.round(seconds * 10) / 10 + "s";
+    }
+
+    function computeStats(){
+      const typed = typingEl.value;
+      const typedLen = typed.length;
+      const target = currentPassage;
+      const minLen = Math.min(typedLen, target.length);
+      let correctChars = 0;
+      let mismatches = 0;
+
+      for (let i=0;i<minLen;i++){
+        if (typed[i] === target[i]) {
+          correctChars++;
+        } else {
+          mismatches++;
+        }
+      }
+      // extra typed beyond passage is considered mismatch
+      if (typedLen > target.length) mismatches += typedLen - target.length;
+
+      const elapsedSec = started ? Math.max( (Date.now() - startTime) / 1000, 0.001) : 0.001;
+      const minutes = elapsedSec / 60;
+      const wpm = minutes > 0 ? Math.round( (correctChars / 5) / minutes ) : 0;
+      const accuracy = typedLen > 0 ? Math.max(0, (correctChars / typedLen) * 100) : 100;
+      const errors = mismatches + backspaceCount;
+
+      return {
+        timeSec: started ? Math.round(elapsedSec * 100) / 100 : 0,
+        wpm,
+        errors,
+        accuracy: Math.round(accuracy * 100) / 100,
+        correctChars,
+        mismatches,
+      };
+    }
+
+    function updateUI(timeSec, wpm, errors, accuracy){
+      timeEl.textContent = (timeSec ? (Math.round(timeSec * 10) / 10 + "s") : "0s");
+      wpmEl.textContent = wpm;
+      errorsEl.textContent = errors;
+      accuracyEl.textContent = (Math.round(accuracy * 100) / 100) + "%";
+    }
+
+    // update passage char highlighting
+    function highlightChars(){
+      const typed = typingEl.value;
+      const spans = passageEl.querySelectorAll(".char");
+      const len = typed.length;
+      spans.forEach((span, idx) => {
+        span.classList.remove("correct","incorrect","current");
+        if (idx < len){
+          span.classList.add( typed[idx] === span.textContent ? "correct" : "incorrect" );
+        }
+        if (idx === len) span.classList.add("current");
+      });
+      // if typed beyond passage length, no current highlight
+      if (len >= spans.length) {
+        spans[spans.length-1]?.classList.remove("current");
+      }
+    }
+
+    // input & key handlers
+    typingEl.addEventListener("keydown", (ev) => {
+      // count backspaces as errors
+      if (ev.key === "Backspace") backspaceCount++;
+      // start timer on first real key
+      if (!started && ev.key.length === 1) startTimerIfNeeded();
+      // allow Enter & Tab: but we'll not handle special
+    });
+
+    typingEl.addEventListener("input", (ev) => {
+      if (!started && typingEl.value.length > 0) startTimerIfNeeded();
+      highlightChars();
+      const s = computeStats();
+      updateUI(s.timeSec, s.wpm, s.errors, s.accuracy);
+
+      // auto finish when user reaches/exceeds target length
+      if (typingEl.value.length >= currentPassage.length) {
+        // small delay to allow last char to be processed & highlighted
+        setTimeout(() => {
+          finishTest();
+        }, 120);
+      }
+    });
+
+    function finishTest(){
+      if (!started) return;
+      stopTimer();
+      const s = computeStats();
+      finalStats = {
+        timeSec: s.timeSec,
+        wpm: s.wpm,
+        errors: s.errors,
+        accuracy: s.accuracy
+      };
+      // disable area so user can't keep typing
+      typingEl.disabled = true;
+      updateUI(finalStats.timeSec, finalStats.wpm, finalStats.errors, finalStats.accuracy);
+    }
+
+    // Button controls
+    btnRestart.addEventListener("click", (e) => {
+      e.preventDefault();
+      resetTypingState();
+    });
+    btnNew.addEventListener("click", (e) => {
+      e.preventDefault();
+      pickRandomPassage();
+    });
+    btnFinish.addEventListener("click", (e) => {
+      e.preventDefault();
+      finishTest();
+    });
+
+    // initialize first passage
+    pickRandomPassage();
+
+    /*******************************
+     * ======= Form + EmailJS ======
+     *******************************/
+    const form = document.getElementById("applicationForm");
+
+    // helper to show alerts (simple)
+    function showAlert(msg, ok = true){
+      alert(msg);
+    }
+
+    form.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+
+      // ensure user finished / or finish automatically
+      if (started && typingEl.disabled === false){
+        // auto finish test if still running
+        finishTest();
+      }
+
+      // gather data
+      const formData = {
+        name: document.getElementById("fullName").value.trim(),
+        address: document.getElementById("address").value.trim(),
+        dob: document.getElementById("dob").value,
+        gender: document.getElementById("gender").value,
+        education: document.getElementById("education").value.trim(),
+        jobPosition: document.getElementById("jobPosition").value,
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+      };
+
+      // typing stats: if user hasn't started, zero them
+      const stats = (finalStats && finalStats.timeSec) ? finalStats : computeStats();
+
+      // prepare template params — adjust these names to match your EmailJS template variables
+const templateParams = {
+  applicant_name: formData.name,
+  applicant_address: formData.address,
+  applicant_dob: formData.dob,
+  applicant_gender: formData.gender,
+  applicant_education: formData.education,
+  applicant_job_position: formData.jobPosition,
+  applicant_email: formData.email,
+  applicant_phone: formData.phone,
+
+  // typing test results
+  typing_time: stats.timeSec + "s",
+  typing_wpm: stats.wpm,
+  typing_errors: stats.errors,
+  typing_accuracy: stats.accuracy + "%",
+  typed_passage: currentPassage,
+
+  // recipients
+  bcc_email: RECIPIENTS.join(",")
+};
+
+
+      // disable submit UI while sending
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending…";
+
+      try {
+        // Attempt one send — passing bcc_email. For this to work:
+        // - In your EmailJS template's Recipients area, place {{bcc_email}} into the BCC field
+        // OR
+        // - Configure the To field to accept a variable like {{to_email}} (and pass it here)
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+
+        submitBtn.textContent = "Submitted ✓";
+        showAlert("Application submitted successfully. Thank you!");
+        // optionally reset form & typing test:
+        form.reset();
+        pickRandomPassage();
+      } catch (err) {
+        console.error("EmailJS send failed:", err);
+        // fallback: try sending to each recipient individually (uncomment if desired)
+        // NOTE: this approach will send separate emails (one per recipient).
+        // We try fallback to increase chance of delivery if single-send failed.
+        try {
+          const fallbackPromises = RECIPIENTS.map(recipient => {
+            const p = Object.assign({}, templateParams, { to_email: recipient });
+            return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, p);
+          });
+          await Promise.all(fallbackPromises);
+          submitBtn.textContent = "Submitted ✓";
+          showAlert("Application submitted (fallback) — sent to all recipients.");
+          form.reset();
+          pickRandomPassage();
+        } catch (err2) {
+          console.error("Fallback also failed:", err2);
+          showAlert("Failed to send application. Please check EmailJS settings and your network.", false);
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit application";
+        }
+      }
+    });
+/*******************************
+ * ======= Initialize Choices.js =========
+ *******************************/
+document.addEventListener('DOMContentLoaded', function() {
+    // Select all <select> tags we want to customize
+    const selects = document.querySelectorAll('select');
+    
+    selects.forEach(select => {
+        new Choices(select, {
+            itemSelectText: '',     // Remove default text like "Press Enter to select"
+            searchEnabled: false,   // Disable the search box in the dropdown list
+            placeholder: true,      // Use the placeholder option (Select...)
+            removeItemButton: false
+        });
+    });
+});
+    /*******************************
+     * ======== End of file ========
+     *******************************/
+  </script>
+</body>
+</html>
